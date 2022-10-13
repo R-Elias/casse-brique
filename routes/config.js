@@ -27,4 +27,16 @@ router.get('/all-configs', async (req, res) => {
     }
 })
 
+router.get("/style", async function(req, res){
+    try{
+        let styleRes = {layout: ""}
+        styleRes.layout = await configHandler.getStyleConfig((req.query.styleId).toString())
+        res.status(200).json(styleRes)
+    }
+    catch(err){
+        let errorMsg = {error: err}
+        res.status(400).json(errorMsg)
+    }
+})
+
 module.exports = router

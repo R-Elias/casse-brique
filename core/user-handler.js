@@ -2,6 +2,8 @@ const User = require("./../models/db-user")
 
 function addUser(username){
     return new Promise((resolve, reject) => {
+        if(username === null || username === '')
+            username = "Anonyme"
         const user = new User({
             username: username
         })

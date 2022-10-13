@@ -16,4 +16,18 @@ const configSchema = new Schema({
 const Config = mongoose.model('Config', configSchema)
 
 
-module.exports = Config
+const styleSchema = new Schema({
+    code: {
+        type: String,
+        required: true
+    },
+    layout: {
+        type: String,
+        required: true
+    }
+})
+
+const Style = mongoose.model('Style', styleSchema)
+
+
+module.exports = {Config, Style}

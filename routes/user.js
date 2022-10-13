@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get('/all-users', async function(req, res){
     try{
-        let allUsersRes = await userHandler.allUsers() 
+        let allUsersRes = await userHandler.allUsers()
         res.status(200).json(allUsersRes)
     }
     catch(err){

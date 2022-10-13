@@ -1,0 +1,2 @@
+- lancer le serveur
+- ouvrir localhost:8080
