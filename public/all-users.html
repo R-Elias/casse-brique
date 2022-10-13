@@ -4,18 +4,25 @@
         <title> All users list </title>
         <meta charset="UTF-8"/>
         <style>
+            body{
+                background: url(fantasy-forest.jpg);
+                background-size: cover;
+            }
             #playerListDiv{
                 display: flex;
                 justify-content: center;
             }
             #playerUnorganisedList{
-                border: solid black 1px;
+                background-color: black;
+                border: 30px solid transparent; 
+                border-image: url(engraved-gold.jpg) 50 round;
                 padding: auto;
                 padding: 10px;
                 list-style:none;
             }
             #playerUnorganisedList p{
                 text-align: center;
+                color: white;
             }
         </style>
     </head>
@@ -44,11 +51,14 @@
                     const ul = document.getElementById("playerUnorganisedList")
                     let li = document.createElement("li")
                     let p = document.createElement("p")
+                    let strong = document.createElement("strong")
                     for(let e in playerList){
                         //console.log(" E : ", e)
                         li = document.createElement("li")
                         p = document.createElement("p")
-                        p.appendChild(document.createTextNode(playerList[e].username))
+                        strong = document.createElement("strong")
+                        strong.appendChild(document.createTextNode(playerList[e].username))
+                        p.appendChild(strong)
                         li.appendChild(p)
                         ul.appendChild(li)
                     }

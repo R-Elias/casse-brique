@@ -1,4 +1,6 @@
-const Config = require("./../models/db-config")
+const dbConfig = require("./../models/db-config")
+const Config = dbConfig.Config
+const Style = dbConfig.Style
 
 // Renvoie la config demandée
 function getConfig(layoutId){
@@ -36,4 +38,26 @@ function allConfigs(){
     })
 }
 
-module.exports = {getConfig, allConfigs}
+function getStyleConfig(styleId){
+    return new Promise((resolve, reject) => {
+        let styleRes = {layout: ""}
+        /** Marche enfin ! */
+        Style.findOne({code: {$eq: styleId.toString()}})
+            .then((result)=>{
+                if(result === null || result.layout === null){
+                    styleRes.layout = "red\ngreen\nblue"
+                }
+                else{
+                    styleRes.layout = result.layout
+                }
+                console.log("styleRes : ", styleRes)
+                console.log("styleRes.layout : ", styleRes.layout)
+                resolve(styleRes.layout)
+            })
+            .catch((err)=>{
+                reject(err)
+            })
+    })
+}
+
+module.exports = {getConfig, allConfigs, getStyleConfig}

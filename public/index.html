@@ -20,6 +20,7 @@
         </div>
         <img src="gold.jpg" id="golden-bg" style="display: none; max-width: 100px; max-height:100px;">
         <img src="shining-blue.jpg" id="shining" style="display: none; max-width: 100px; max-height:100px;">
+        <img src="crystal-border.jpg" id="crystalBrick" style="display: none; max-width: 100px; max-height:100px;">
         <script>
 
             let canvas = document.getElementById("myCanvas");
@@ -67,6 +68,18 @@
             // config
             let layoutId = 0
             let layout = ""
+
+            let styleLayout = ""
+            // Color config
+            /* 
+            let ballFillStyle = document.getElementById("shining");
+            let paddleFillStyle = document.getElementById("golden-bg");
+            let brickFillStyle = document.getElementById("crystalBrick") 
+            */
+            let ballFillStyle = "yellow";
+            let paddleFillStyle = "white";
+            let brickFillStyle = "red"
+
             // Ecoute des évènements (ici, flèche gauche/droite et déplacement de souris)
             document.addEventListener("keydown", keyDownHandler, false);
             document.addEventListener("keyup", keyUpHandler, false);
@@ -149,21 +162,23 @@
             
             
             function drawBall(){
-                let img = document.getElementById("shining");
-                let pat = ctx.createPattern(img, "repeat");
+                //let img = ballFillStyle
+                //let pat = ctx.createPattern(img, "repeat");
                 ctx.beginPath();
                 ctx.arc(x, y, ballRadius, 0, (Math.PI)*2);
-                ctx.fillStyle = pat;
+                //ctx.fillStyle = pat;
+                ctx.fillStyle = ballFillStyle
                 ctx.fill();
                 ctx.closePath();
             }
 
             function drawPaddle(){
-                let img = document.getElementById("golden-bg");
-                let pat = ctx.createPattern(img, "repeat");
+                //let img = paddleFillStyle
+                //let pat = ctx.createPattern(img, "repeat");
                 ctx.beginPath();
                 ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
-                ctx.fillStyle = pat;
+                //ctx.fillStyle = pat;
+                ctx.fillStyle = paddleFillStyle
                 ctx.fill();
                 ctx.closePath();
             }
@@ -178,7 +193,10 @@
                             bricks[c][r].y = brickY;
                             ctx.beginPath();
                             ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                            ctx.fillStyle = "chocolate"
+                            //let img = brickFillStyle
+                            //let pat = ctx.createPattern(img, "repeat");
+                            //ctx.fillStyle = pat
+                            ctx.fillStyle = brickFillStyle
                             ctx.fill();
                             ctx.closePath();
                         }
@@ -202,6 +220,16 @@
                 }
                 console.log("totalBricks : ",totalBricks)
             }
+
+            function buildStyle(){
+                let temp = styleLayout.split('\n')
+                ballFillStyle = temp[0]
+                console.log("ball fill style : ", ballFillStyle)
+                paddleFillStyle = temp[1]
+                console.log("paddle fill style : ", paddleFillStyle)
+                brickFillStyle = temp[2]
+                console.log("brick fill style : ", brickFillStyle)
+            }
             function drawScore(){
                 ctx.font = "16px Arial";
                 ctx.fillStyle = "gold";
@@ -224,6 +252,27 @@
                 }
             }
 
+            function getStyle(){
+                styleId = prompt("Quel style voulez-vous ?(balle, raquette, briques)\n 1: (blanc,orange,jaune) \n 2: (blanc, violet, jaune)\n 3: (blanc, jaune, jaune)\n 4: (cyan, doré, chocolat)\n 5: (blanc, blanc, chocolat) \n 6: full black")
+                
+                let fetchOptions = {
+                    method: 'GET',
+                    mode: 'cors',
+                }
+               fetch(`http://localhost:8080/config/style?styleId=${styleId}`, fetchOptions)
+                .then(response => {
+                    console.log("response of config styleId:",response)
+                    return response.json()
+                })
+                .then(json => {
+                    console.log("json : ",json)
+                    styleLayout = json.layout;
+                    buildStyle()
+                })
+                
+                .catch(err => console.log(err))
+            }
+
             function getConfig(){
                 layoutId = prompt("Quelle config voulez-vous ? (one, rectangle, v, vertical, cercle)")
                 
@@ -233,12 +282,14 @@
                 }
                fetch(`http://localhost:8080/config?layoutId=${layoutId}`, fetchOptions)
                 .then(response => {
-                    console.log("response:",response)
+                    console.log("response of config layoutId:",response)
                     return response.json()
                 })
                 .then(json => {
                     console.log("json : ",json)
                     layout = json.layout;
+                    getStyle()
+                    console.log("On est dans le then de getStyle dans getConfig")
                     buildLayout()
                     let interval = setInterval(draw, 7);
                 })
@@ -247,6 +298,8 @@
                 .catch(err => console.log(err))
             }
             
+            
+
             function postScore(){
                 let date = new Date()
                 let scoreRes = {"score": score, "username": pseudo, "lives": lives, "date": date.toString()}
@@ -312,7 +365,7 @@
             }
             
             //pseudo = prompt('Entrez votre pseudo')
-            
+
             askNewUser()
             getConfig()
             //postScore()

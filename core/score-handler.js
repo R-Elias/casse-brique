@@ -3,6 +3,10 @@ const Score = require("./../models/db-score")
 function addScore(score, username){
     try{
         return new Promise((resolve, reject) => {
+            if(username === null || username === '')
+                username = "Anonyme"
+            if(score === null || score === '')
+                score = "0"
             const resScore = new Score({
                 score: score,
                 username: username
@@ -10,7 +14,6 @@ function addScore(score, username){
             //res_score.save()
             Score.create(resScore)
                 .then((result)=>{
-                    //console.log("Successfully saved !")
                     resolve(result)
                 })
                 .catch((err)=>{
