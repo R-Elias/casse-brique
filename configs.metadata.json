@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"casse-brique.configs"}],"uuid":"47f5f37a5e494ec98e79f2a6d5fabb18"}
